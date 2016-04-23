@@ -11,6 +11,8 @@ import UIKit
 
 class STEMIHexapod {
     
+    //handle this!
+    
     //var mainJoystick: UIViewController!
     //var leftJoystick: UIViewController!
     //var rightJoystick: UIViewController!

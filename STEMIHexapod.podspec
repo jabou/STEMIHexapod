@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
   s.source = { :git => "https://github.com/jabou/STEMIHexapod.git", :tag => "#{s.version}"}
   s.framework = "UIKit"
   s.source_files = "STEMIHexapod/**/*.{swift}"
-  s.resources = "STEMIHexapod/**/*.{png,jpeg,jpg,storyboard,xib}"
+  #s.resources = "STEMIHexapod/**/*.{png,jpeg,jpg,storyboard,xib}"
 end
