@@ -11,15 +11,6 @@ import UIKit
 
 public class Hexapod {
     
-    //var mainJoystick: UIViewController!
-    //var leftJoystick: UIViewController!
-    //var rightJoystick: UIViewController!
-    
-    //var openCommunication: Bool = false
-    //var out: NSOutputStream?
-    //var outForiOS7: Unmanaged<CFWriteStream>?
-    //var bufferOutput: [UInt8] = []
-    
     var currPacket: Packet!
     var sendPacket: PacketSender!
     var ipAddress: String!
