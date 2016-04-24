@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.name = "STEMIHexapod"
   s.summary = "Framework for easier programming iOS App for STEMI hexapod robot"
   s.requires_arc = true
-  s.version = "0.1.1"
+  s.version = "0.2.0"
   s.license = { :type => "MIT", :file => "LICENSE" }
   s.author = { "Jasmin Abou Aldan" => "jasmin.aboualdan@gmail.com" }
   s.homepage = "https://github.com/jabou/STEMIHexapod"

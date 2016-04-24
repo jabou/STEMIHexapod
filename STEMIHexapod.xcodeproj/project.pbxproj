@@ -8,14 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		0640EAF81CCBF5AE00FE5E30 /* STEMIHexapod.h in Headers */ = {isa = PBXBuildFile; fileRef = 0640EAF71CCBF5AE00FE5E30 /* STEMIHexapod.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0640EB001CCBF67700FE5E30 /* STEMIHexapod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0640EAFF1CCBF67700FE5E30 /* STEMIHexapod.swift */; };
+		065FCB9B1CCD375D00257EA4 /* Hexapod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065FCB981CCD375D00257EA4 /* Hexapod.swift */; };
+		065FCB9C1CCD375D00257EA4 /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065FCB991CCD375D00257EA4 /* Packet.swift */; };
+		065FCB9D1CCD375D00257EA4 /* PacketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065FCB9A1CCD375D00257EA4 /* PacketSender.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0640EAF41CCBF5AE00FE5E30 /* STEMIHexapod.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = STEMIHexapod.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0640EAF71CCBF5AE00FE5E30 /* STEMIHexapod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STEMIHexapod.h; sourceTree = "<group>"; };
 		0640EAF91CCBF5AE00FE5E30 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0640EAFF1CCBF67700FE5E30 /* STEMIHexapod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STEMIHexapod.swift; sourceTree = "<group>"; };
+		065FCB981CCD375D00257EA4 /* Hexapod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hexapod.swift; sourceTree = "<group>"; };
+		065FCB991CCD375D00257EA4 /* Packet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Packet.swift; sourceTree = "<group>"; };
+		065FCB9A1CCD375D00257EA4 /* PacketSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PacketSender.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,8 +52,10 @@
 		0640EAF61CCBF5AE00FE5E30 /* STEMIHexapod */ = {
 			isa = PBXGroup;
 			children = (
+				065FCB981CCD375D00257EA4 /* Hexapod.swift */,
+				065FCB991CCD375D00257EA4 /* Packet.swift */,
+				065FCB9A1CCD375D00257EA4 /* PacketSender.swift */,
 				0640EAF71CCBF5AE00FE5E30 /* STEMIHexapod.h */,
-				0640EAFF1CCBF67700FE5E30 /* STEMIHexapod.swift */,
 				0640EAF91CCBF5AE00FE5E30 /* Info.plist */,
 			);
 			path = STEMIHexapod;
@@ -133,7 +139,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0640EB001CCBF67700FE5E30 /* STEMIHexapod.swift in Sources */,
+				065FCB9D1CCD375D00257EA4 /* PacketSender.swift in Sources */,
+				065FCB9B1CCD375D00257EA4 /* Hexapod.swift in Sources */,
+				065FCB9C1CCD375D00257EA4 /* Packet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,6 +242,8 @@
 		0640EAFD1CCBF5AE00FE5E30 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -245,12 +255,15 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.aboualdan.STEMIHexapod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		0640EAFE1CCBF5AE00FE5E30 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
