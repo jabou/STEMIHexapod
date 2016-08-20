@@ -8,16 +8,26 @@
 
 import UIKit
 
+@objc protocol HexapodDelegate {
+    /**
+     Check if app is connected to STEMI.
 
-public class Hexapod {
-    
+     -returns: True if stemi is connected and sending data. False if it is not connected or not sending data.
+     */
+    optional func connectionStatus(isConnected: Bool)
+}
+
+public class Hexapod: PacketSenderDelegate {
+
+    //Public variables
     var currPacket: Packet!
     var sendPacket: PacketSender!
     var ipAddress: String!
     var port: Int!
     let slidersArray: [UInt8] = [50, 25, 0, 0, 0, 50, 0, 0, 0, 0, 0]
     
-    
+    //Delegate
+    var delegate: HexapodDelegate?
     
     ///Initializes defoult connection with IP Address: _192.168.4.1_, and port: _80_
     public init(){
@@ -29,9 +39,8 @@ public class Hexapod {
     /**
     Initializes connection with custom IP Address and port
     
-    - parameters:
-        - connectWithIP: Takes IP Address *(def: 192.168.4.1)*
-        - andPort: Takes port *(def: 80)*
+    - parameter connectWithIP: Takes IP Address *(def: 192.168.4.1)*
+    - parameter andPort: Takes port *(def: 80)*
     */
     public init(connectWithIP: String, andPort: Int){
         self.ipAddress = connectWithIP
@@ -42,8 +51,7 @@ public class Hexapod {
     /**
      Change IP Address to new one. By default this is set to _192.168.4.1_
      
-     - parameters:
-       - newIP: Takes new IP Address
+    - parameter newIP: Takes new IP Address
      */
     public func setIP(newIP: String){
         self.ipAddress = newIP
@@ -54,6 +62,7 @@ public class Hexapod {
      */
     public func connect(){
         self.sendPacket = PacketSender(hexapod: self)
+        self.sendPacket.delegate = self
         sendPacket.startSendingData()
     }
     
@@ -156,9 +165,8 @@ public class Hexapod {
      - For angle 0 - 180 you can use 0-90 (original devided by 2)
      - For angle 180 - 360 you can use 166-255 (this can be represented like value from -180 to 0. Logic is same: 255 + (original devided by 2))
      
-     - parameters:
-       - power: Takes values for movement speed (_Values must be: 0-100_)
-       - angle: Takes values for angle of moving (_Values can be: 0-255, look at the description!_)
+    - parameter power: Takes values for movement speed (_Values must be: 0-100_)
+    - parameter angle: Takes values for angle of moving (_Values can be: 0-255, look at the description!_)
      */
     public func setJoystickParams(power: UInt8, angle: UInt8){
         currPacket.power = power
@@ -174,8 +182,7 @@ public class Hexapod {
      - For rotate to right you can use values 0 - 100
      - For rotate to left you can use 255-156 (this can be represented like value from 0 to -100 as 255 - position.)
      
-     - parameters:
-       - rotation: Takes values for rotation speed (_Values must be: 0-255, look at the description!_)
+    - parameter rotation: Takes values for rotation speed (_Values must be: 0-255, look at the description!_)
      */
     public func setJoystickParams(rotation: UInt8){
         currPacket.rotation = rotation
@@ -190,8 +197,7 @@ public class Hexapod {
      - For tilt forward you can use values 0 - 216 (this can be represented like value from 0 to -100 as 255 - position.)
      - For tilt backward you can use 0 - 100.
      
-     - parameters:
-       - x: Takes values for X tilting (_Values must be: 0-255, look at the description!_)
+    - parameter x: Takes values for X tilting (_Values must be: 0-255, look at the description!_)
      */
     public func setAccX(x: UInt8){
         currPacket.accX = x
@@ -206,8 +212,7 @@ public class Hexapod {
      - For tilt left you can use values 0 - 216 (this can be represented like value from 0 to -100 as 255 - position.)
      - For tilt right you can use 0 - 100.
      
-     - parameters:
-       - x: Takes values for Y tilting (_Values must be: 0-255, look at the description!_)
+    - parameter y: Takes values for Y tilting (_Values must be: 0-255, look at the description!_)
      */
     public func setAccY(y: UInt8){
         currPacket.accY = y
@@ -278,5 +283,9 @@ public class Hexapod {
      */
     public func turnOff(){
         currPacket.onOff = 0
+    }
+
+    func connectionLost() {
+        delegate?.connectionStatus!(false)
     }
 }
