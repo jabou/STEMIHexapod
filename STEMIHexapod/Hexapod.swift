@@ -8,13 +8,13 @@
 
 import UIKit
 
-@objc protocol HexapodDelegate {
+@objc public protocol HexapodDelegate: class {
     /**
      Check if app is connected to STEMI.
 
      -returns: True if stemi is connected and sending data. False if it is not connected or not sending data.
      */
-    optional func connectionStatus(isConnected: Bool)
+    @objc optional func connectionStatus(active: Bool)
 }
 
 public class Hexapod: PacketSenderDelegate {
@@ -27,7 +27,7 @@ public class Hexapod: PacketSenderDelegate {
     let slidersArray: [UInt8] = [50, 25, 0, 0, 0, 50, 0, 0, 0, 0, 0]
     
     //Delegate
-    var delegate: HexapodDelegate?
+    weak public var delegate: HexapodDelegate?
     
     ///Initializes defoult connection with IP Address: _192.168.4.1_, and port: _80_
     public init(){
@@ -42,9 +42,9 @@ public class Hexapod: PacketSenderDelegate {
     - parameter connectWithIP: Takes IP Address *(def: 192.168.4.1)*
     - parameter andPort: Takes port *(def: 80)*
     */
-    public init(connectWithIP: String, andPort: Int){
-        self.ipAddress = connectWithIP
-        self.port = andPort
+    public init(IP: String, port: Int){
+        self.ipAddress = IP
+        self.port = port
         self.currPacket = Packet()
     }
     
@@ -53,7 +53,7 @@ public class Hexapod: PacketSenderDelegate {
      
     - parameter newIP: Takes new IP Address
      */
-    public func setIP(newIP: String){
+    public func set(newIP: String){
         self.ipAddress = newIP
     }
     
@@ -199,7 +199,7 @@ public class Hexapod: PacketSenderDelegate {
      
     - parameter x: Takes values for X tilting (_Values must be: 0-255, look at the description!_)
      */
-    public func setAccX(x: UInt8){
+    public func setAcc(x: UInt8){
         currPacket.accX = x
     }
     
@@ -214,7 +214,7 @@ public class Hexapod: PacketSenderDelegate {
      
     - parameter y: Takes values for Y tilting (_Values must be: 0-255, look at the description!_)
      */
-    public func setAccY(y: UInt8){
+    public func setAcc(y: UInt8){
         currPacket.accY = y
     }
     
@@ -285,7 +285,11 @@ public class Hexapod: PacketSenderDelegate {
         currPacket.onOff = 0
     }
 
-    func connectionLost() {
-        delegate?.connectionStatus!(false)
+    internal func connectionLost() {
+        delegate?.connectionStatus!(active: false)
+    }
+
+    internal func connectionActive() {
+        delegate?.connectionStatus!(active: true)
     }
 }

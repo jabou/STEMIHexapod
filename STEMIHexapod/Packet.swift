@@ -27,7 +27,7 @@ class Packet{
         self.bufferOutput = []
         
         let pkt: [UInt8] = Array("PKT".utf8)
-        self.bufferOutput.appendContentsOf(pkt)
+        self.bufferOutput.append(contentsOf: pkt)
         self.bufferOutput.append(power)
         self.bufferOutput.append(angle)
         self.bufferOutput.append(rotation)
@@ -36,7 +36,7 @@ class Packet{
         self.bufferOutput.append(onOff)
         self.bufferOutput.append(accX)
         self.bufferOutput.append(accY)
-        self.bufferOutput.appendContentsOf(self.slidersArray)
+        self.bufferOutput.append(contentsOf: self.slidersArray)
         
         return bufferOutput
     }
