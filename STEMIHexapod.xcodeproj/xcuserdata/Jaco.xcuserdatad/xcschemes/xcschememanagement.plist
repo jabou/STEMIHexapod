@@ -4,15 +4,25 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>STEMIHexapod.xcscheme_^#shared#^_</key>
+		<key>STEMIHexapod.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>0640EAF31CCBF5AE00FE5E30</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>06F3732D1D85E86F00F44D21</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>06F373361D85E86F00F44D21</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -42,7 +42,8 @@ class PacketSender: NSObject, StreamDelegate {
         configuration.timeoutIntervalForRequest = 3
         let session = URLSession(configuration: configuration)
         let request = URLRequest(url: URL(string: "http://\(self.hexapod.ipAddress)/stemiData.json")!)
-        let task: URLSessionTask = session.dataTask(with: request, completionHandler: { (data, response, error) in
+        let task: URLSessionTask = session.dataTask(with: request, completionHandler: {
+            (data, response, error) in
 
             //If there is data, try to read it
             if let data = data {
