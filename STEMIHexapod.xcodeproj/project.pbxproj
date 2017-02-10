@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		062F5BE51E4E743E00B2E3FF /* CalibrationPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F5BDE1E4E743E00B2E3FF /* CalibrationPackage.swift */; };
+		062F5BE61E4E743E00B2E3FF /* CalibrationPacketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F5BDF1E4E743E00B2E3FF /* CalibrationPacketSender.swift */; };
+		062F5BE71E4E743E00B2E3FF /* Hexapod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F5BE01E4E743E00B2E3FF /* Hexapod.swift */; };
+		062F5BE81E4E743E00B2E3FF /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 062F5BE11E4E743E00B2E3FF /* Info.plist */; };
+		062F5BE91E4E743E00B2E3FF /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F5BE21E4E743E00B2E3FF /* Packet.swift */; };
+		062F5BEA1E4E743E00B2E3FF /* PacketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F5BE31E4E743E00B2E3FF /* PacketSender.swift */; };
+		062F5BEB1E4E743E00B2E3FF /* STEMIHexapod.h in Headers */ = {isa = PBXBuildFile; fileRef = 062F5BE41E4E743E00B2E3FF /* STEMIHexapod.h */; };
 		06F373381D85E86F00F44D21 /* STEMIHexapod.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F3732E1D85E86F00F44D21 /* STEMIHexapod.framework */; };
 		06F3733D1D85E86F00F44D21 /* STEMIHexapodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F3733C1D85E86F00F44D21 /* STEMIHexapodTests.swift */; };
-		06F3733F1D85E86F00F44D21 /* STEMIHexapod.h in Headers */ = {isa = PBXBuildFile; fileRef = 06F373311D85E86F00F44D21 /* STEMIHexapod.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		06F3735F1D85ECF100F44D21 /* Hexapod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F3735C1D85ECF100F44D21 /* Hexapod.swift */; };
-		06F373601D85ECF100F44D21 /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F3735D1D85ECF100F44D21 /* Packet.swift */; };
-		06F373611D85ECF100F44D21 /* PacketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F3735E1D85ECF100F44D21 /* PacketSender.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,15 +29,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		062F5BDE1E4E743E00B2E3FF /* CalibrationPackage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalibrationPackage.swift; sourceTree = "<group>"; };
+		062F5BDF1E4E743E00B2E3FF /* CalibrationPacketSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalibrationPacketSender.swift; sourceTree = "<group>"; };
+		062F5BE01E4E743E00B2E3FF /* Hexapod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hexapod.swift; sourceTree = "<group>"; };
+		062F5BE11E4E743E00B2E3FF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		062F5BE21E4E743E00B2E3FF /* Packet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Packet.swift; sourceTree = "<group>"; };
+		062F5BE31E4E743E00B2E3FF /* PacketSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PacketSender.swift; sourceTree = "<group>"; };
+		062F5BE41E4E743E00B2E3FF /* STEMIHexapod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STEMIHexapod.h; sourceTree = "<group>"; };
 		06F3732E1D85E86F00F44D21 /* STEMIHexapod.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = STEMIHexapod.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		06F373311D85E86F00F44D21 /* STEMIHexapod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STEMIHexapod.h; sourceTree = "<group>"; };
-		06F373321D85E86F00F44D21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		06F373371D85E86F00F44D21 /* STEMIHexapodTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STEMIHexapodTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		06F3733C1D85E86F00F44D21 /* STEMIHexapodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STEMIHexapodTests.swift; sourceTree = "<group>"; };
 		06F3733E1D85E86F00F44D21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		06F3735C1D85ECF100F44D21 /* Hexapod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hexapod.swift; sourceTree = "<group>"; };
-		06F3735D1D85ECF100F44D21 /* Packet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Packet.swift; sourceTree = "<group>"; };
-		06F3735E1D85ECF100F44D21 /* PacketSender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PacketSender.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,11 +82,13 @@
 		06F373301D85E86F00F44D21 /* STEMIHexapod */ = {
 			isa = PBXGroup;
 			children = (
-				06F3735C1D85ECF100F44D21 /* Hexapod.swift */,
-				06F3735D1D85ECF100F44D21 /* Packet.swift */,
-				06F3735E1D85ECF100F44D21 /* PacketSender.swift */,
-				06F373311D85E86F00F44D21 /* STEMIHexapod.h */,
-				06F373321D85E86F00F44D21 /* Info.plist */,
+				062F5BDE1E4E743E00B2E3FF /* CalibrationPackage.swift */,
+				062F5BDF1E4E743E00B2E3FF /* CalibrationPacketSender.swift */,
+				062F5BE01E4E743E00B2E3FF /* Hexapod.swift */,
+				062F5BE11E4E743E00B2E3FF /* Info.plist */,
+				062F5BE21E4E743E00B2E3FF /* Packet.swift */,
+				062F5BE31E4E743E00B2E3FF /* PacketSender.swift */,
+				062F5BE41E4E743E00B2E3FF /* STEMIHexapod.h */,
 			);
 			path = STEMIHexapod;
 			sourceTree = "<group>";
@@ -102,7 +109,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06F3733F1D85E86F00F44D21 /* STEMIHexapod.h in Headers */,
+				062F5BEB1E4E743E00B2E3FF /* STEMIHexapod.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,7 +165,7 @@
 					06F3732D1D85E86F00F44D21 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 9ZQJ38F5V6;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					06F373361D85E86F00F44D21 = {
@@ -191,6 +198,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				062F5BE81E4E743E00B2E3FF /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,9 +216,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06F373611D85ECF100F44D21 /* PacketSender.swift in Sources */,
-				06F3735F1D85ECF100F44D21 /* Hexapod.swift in Sources */,
-				06F373601D85ECF100F44D21 /* Packet.swift in Sources */,
+				062F5BE71E4E743E00B2E3FF /* Hexapod.swift in Sources */,
+				062F5BE51E4E743E00B2E3FF /* CalibrationPackage.swift in Sources */,
+				062F5BE61E4E743E00B2E3FF /* CalibrationPacketSender.swift in Sources */,
+				062F5BEA1E4E743E00B2E3FF /* PacketSender.swift in Sources */,
+				062F5BE91E4E743E00B2E3FF /* Packet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

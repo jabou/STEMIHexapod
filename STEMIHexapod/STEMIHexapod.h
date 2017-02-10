@@ -2,7 +2,7 @@
 //  STEMIHexapod.h
 //  STEMIHexapod
 //
-//  Created by Jasmin Abou Aldan on 11/09/2016.
+//  Created by Jasmin Abou Aldan on 23/04/16.
 //  Copyright © 2016 Jasmin Abou Aldan. All rights reserved.
 //
 

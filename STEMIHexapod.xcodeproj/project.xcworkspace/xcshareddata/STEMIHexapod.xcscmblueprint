@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "B67CBD388DC6CD49A98346A439EC4A5DE766C1AE",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "B67CBD388DC6CD49A98346A439EC4A5DE766C1AE" : 9223372036854775807,
+    "EEEC449ABD0735A8D946123215F20307648F703F" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "7DDDB457-AAB5-4964-9E46-1FBB40853E63",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "B67CBD388DC6CD49A98346A439EC4A5DE766C1AE" : "STEMI-lib\/",
+    "EEEC449ABD0735A8D946123215F20307648F703F" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "STEMIHexapod",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "STEMIHexapod.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:jabou\/STEMIHexapod.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B67CBD388DC6CD49A98346A439EC4A5DE766C1AE"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/jabou\/STEMI-iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EEEC449ABD0735A8D946123215F20307648F703F"
+    }
+  ]
+}

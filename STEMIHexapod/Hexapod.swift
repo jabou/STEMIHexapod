@@ -8,70 +8,147 @@
 
 import UIKit
 
-@objc public protocol HexapodDelegate: class {
+//MARK: - Walking styles
+public enum WalkingStyle {
+    case TripodGait
+    case TripodGaitAngled
+    case TripodGaitStar
+    case WaveGait
+}
+
+//MARK: - Error types
+public enum CalibrationValuesError: ErrorType {
+    case OutOfBounds
+}
+
+@objc protocol HexapodDelegate: class {
     /**
      Check if app is connected to STEMI.
 
      -returns: True if stemi is connected and sending data. False if it is not connected or not sending data.
      */
-    @objc optional func connectionStatus(active: Bool)
+    optional func connectionStatus(isConnected: Bool)
 }
 
 public class Hexapod: PacketSenderDelegate {
 
-    //Public variables
-    var currPacket: Packet!
-    var sendPacket: PacketSender!
-    var ipAddress: String!
-    var port: Int!
-    let slidersArray: [UInt8] = [50, 25, 0, 0, 0, 50, 0, 0, 0, 0, 0]
+    //Internal variables
+    internal var currPacket: Packet!
+    internal var sendPacket: PacketSender!
+    internal var calibrationPacket: CalibrationPackage!
+    internal var sendCalibrationPacket: CalibrationPacketSender!
+    internal var ipAddress: String!
+    internal var port: Int!
+    internal var calibrationModeEnabled = false
+    internal let slidersArray: [UInt8] = [50, 25, 0, 0, 0, 50, 0, 0, 0, 0, 0]
+
+    //Private variables
+    private var initialCalibrationData: [UInt8] = []
     
     //Delegate
-    weak public var delegate: HexapodDelegate?
+    weak var delegate: HexapodDelegate?
+
+    //MARK: - Hexapod init
     
     ///Initializes defoult connection with IP Address: _192.168.4.1_, and port: _80_
+    ///For calibration, use init withCalibrationmode!
     public init(){
         self.ipAddress = "192.168.4.1"
         self.port = 80
-        self.currPacket = Packet()
+
+        currPacket = Packet()
+    }
+
+    /**
+     Initializes default connection with IP address: 192.168.4.1 and port: 80. Includes calibration mode.
+     
+     - Parameter withCalibrationMode: Takes true or false if calibration mode should be enabled.
+     */
+    public init(withCalibrationMode: Bool) {
+        calibrationModeEnabled = withCalibrationMode
+        self.ipAddress = "192.168.4.1"
+        self.port = 80
+        if calibrationModeEnabled {
+            calibrationPacket = CalibrationPackage()
+        } else {
+            currPacket = Packet()
+        }
     }
     
     /**
     Initializes connection with custom IP Address and port
     
-    - parameter connectWithIP: Takes IP Address *(def: 192.168.4.1)*
-    - parameter andPort: Takes port *(def: 80)*
+    - Parameter connectWithIP: Takes IP Address *(def: 192.168.4.1)*
+    - Parameter andPort: Takes port *(def: 80)*
     */
-    public init(IP: String, port: Int){
-        self.ipAddress = IP
-        self.port = port
-        self.currPacket = Packet()
+    public init(connectWithIP: String, andPort: Int){
+        ipAddress = connectWithIP
+        port = andPort
+
+        currPacket = Packet()
     }
     
     /**
      Change IP Address to new one. By default this is set to _192.168.4.1_
      
-    - parameter newIP: Takes new IP Address
+    - Parameter newIP: Takes new IP Address
      */
-    public func set(newIP: String){
-        self.ipAddress = newIP
+    public func setIP(newIP: String){
+        ipAddress = newIP
     }
+
+    //MARK: - Hexapod connection handling
     
     /**
      Establish connection with Hexapod. After connection is established, it sends new packet every 200ms.
      */
     public func connect(){
-        self.sendPacket = PacketSender(hexapod: self)
-        self.sendPacket.delegate = self
-        sendPacket.startSendingData()
+        if calibrationModeEnabled {
+            sendCalibrationPacket = CalibrationPacketSender(hexapod: self)
+            sendCalibrationPacket.enterToCalibrationMode({ entered in
+                if entered {
+                    self.initialCalibrationData = self.calibrationPacket.legsValues
+                }
+            })
+        } else {
+            sendPacket = PacketSender(hexapod: self)
+            sendPacket.delegate = self
+            sendPacket.startSendingData()
+        }
+    }
+
+    /**
+     Establish connection with Hexapod with completion callback. After connection is established, it sends new packet every 100 ms.
+     */
+    public func connectWithCompletion(complete: (Bool) -> Void) {
+        if calibrationModeEnabled {
+            sendCalibrationPacket = CalibrationPacketSender(hexapod: self)
+            sendCalibrationPacket.enterToCalibrationMode({ entered in
+                if entered {
+                    self.initialCalibrationData = self.sendCalibrationPacket.legsValuesArray
+                    complete(true)
+                }
+            })
+        } else {
+            sendPacket = PacketSender(hexapod: self)
+            sendPacket.delegate = self
+            sendPacket.startSendingData()
+            complete(true)
+        }
     }
     
     /**
      Stops sending data to Hexapod, and closes connection.
      */
     public func disconnect(){
-        sendPacket.stopSendingData()
+        if calibrationModeEnabled {
+            sendCalibrationPacket.stopSendingData()
+        } else {
+            sendPacket.stopSendingData()
+        }
     }
+
+    //MARK: - Hexapod movement hanlding
     
     /**
      Moves Hexapod forward with max power.
@@ -165,8 +242,8 @@ public class Hexapod: PacketSenderDelegate {
      - For angle 0 - 180 you can use 0-90 (original devided by 2)
      - For angle 180 - 360 you can use 166-255 (this can be represented like value from -180 to 0. Logic is same: 255 + (original devided by 2))
      
-    - parameter power: Takes values for movement speed (_Values must be: 0-100_)
-    - parameter angle: Takes values for angle of moving (_Values can be: 0-255, look at the description!_)
+    - Parameter power: Takes values for movement speed (_Values must be: 0-100_)
+    - Parameter angle: Takes values for angle of moving (_Values can be: 0-255, look at the description!_)
      */
     public func setJoystickParams(power: UInt8, angle: UInt8){
         currPacket.power = power
@@ -182,7 +259,7 @@ public class Hexapod: PacketSenderDelegate {
      - For rotate to right you can use values 0 - 100
      - For rotate to left you can use 255-156 (this can be represented like value from 0 to -100 as 255 - position.)
      
-    - parameter rotation: Takes values for rotation speed (_Values must be: 0-255, look at the description!_)
+    - Parameter rotation: Takes values for rotation speed (_Values must be: 0-255, look at the description!_)
      */
     public func setJoystickParams(rotation: UInt8){
         currPacket.rotation = rotation
@@ -197,9 +274,9 @@ public class Hexapod: PacketSenderDelegate {
      - For tilt forward you can use values 0 - 216 (this can be represented like value from 0 to -100 as 255 - position.)
      - For tilt backward you can use 0 - 100.
      
-    - parameter x: Takes values for X tilting (_Values must be: 0-255, look at the description!_)
+    - Parameter x: Takes values for X tilting (_Values must be: 0-255, look at the description!_)
      */
-    public func setAcc(x: UInt8){
+    public func setAccX(x: UInt8){
         currPacket.accX = x
     }
     
@@ -212,9 +289,9 @@ public class Hexapod: PacketSenderDelegate {
      - For tilt left you can use values 0 - 216 (this can be represented like value from 0 to -100 as 255 - position.)
      - For tilt right you can use 0 - 100.
      
-    - parameter y: Takes values for Y tilting (_Values must be: 0-255, look at the description!_)
+    - Parameter y: Takes values for Y tilting (_Values must be: 0-255, look at the description!_)
      */
-    public func setAcc(y: UInt8){
+    public func setAccY(y: UInt8){
         currPacket.accY = y
     }
     
@@ -270,6 +347,8 @@ public class Hexapod: PacketSenderDelegate {
         currPacket.staticTilt = 0
         currPacket.movingTilt = 1
     }
+
+    //MARK: - Hexapod standby hanling
     
     /**
      Puts Hexapod in standby.
@@ -285,11 +364,103 @@ public class Hexapod: PacketSenderDelegate {
         currPacket.onOff = 0
     }
 
+    //MARK: - Hexapod settings
+
+    /**
+     Set hexapod height. This value can be from 0 to 100.
+     */
+    public func setHeight(height: UInt8) {
+        currPacket.height = height
+    }
+
+    /**
+     Set hexapod walking style. This value can be TripodGait, TripodGaitAngled, TripodGaitStar or WaveGait
+     */
+    public func setWalkingStyle(style: WalkingStyle) {
+        var walkingStyleValue: UInt8!
+        switch style.hashValue {
+        case 0:
+            walkingStyleValue = 30
+        case 1:
+            walkingStyleValue = 60
+        case 2:
+            walkingStyleValue = 80
+        case 3:
+            walkingStyleValue = 100
+        default:
+            walkingStyleValue = 30
+        }
+        currPacket.walkingStyle = walkingStyleValue
+    }
+
+    //MARK: - Calibration
+
+    /**
+     Sets calibration value at given leg index.
+     
+     - Parameter value: Value of Hexapod motor.
+     - Parameter index: Index of Hexapod motor.
+     
+     - Throws: `CalibrationValuesError.OutOfBounds` if the `index` parameter is less than zero and more than 100.
+     */
+    public func setCalibrationValue(value: UInt8, atIndex index: Int) throws {
+        if value >= 0 && value <= 100 {
+            calibrationPacket.legsValues[index] = value
+        } else {
+            throw CalibrationValuesError.OutOfBounds
+        }
+    }
+
+    /**
+     Increase legs calibration value at given leg index.
+     
+     - Parameter index: Takes leg index.
+     */
+    public func increaseCalibrationValueAtIndex(index: Int) {
+        if calibrationPacket.legsValues[index] < 100 {
+            calibrationPacket.legsValues[index] += 1
+        }
+    }
+
+    /**
+     Decrease legs calibration value at given index.
+     
+     - Parameter index: Takes leg index.
+     */
+    public func decreaseCalibrationValueAtIndex(index: Int) {
+        if calibrationPacket.legsValues[index] > 0 {
+            calibrationPacket.legsValues[index] -= 1
+        }
+    }
+
+    /**
+     Writes new calibration values to Hexapod.
+     */
+    public func writeDataToHexapod(complete: (Bool) -> Void) {
+        sendCalibrationPacket.stopSendingData()
+        NSThread.sleepForTimeInterval(0.5)
+        calibrationPacket.writeToHexapod = WriteData.Yes.rawValue
+        sendCalibrationPacket.sendOnePackage()
+        calibrationPacket.writeToHexapod = WriteData.No.rawValue
+        NSThread.sleepForTimeInterval(0.1)
+        complete(true)
+    }
+
+    /**
+     Get calibration data saved on Hexapod.
+
+     - Returns array: of calibration values stored on Hexapod.
+     */
+    public func fetchDataFromHexapod() -> [UInt8] {
+        return initialCalibrationData
+    }
+
+    //MARK: - Internal methods for handling connection
     internal func connectionLost() {
-        delegate?.connectionStatus!(active: false)
+        delegate?.connectionStatus!(false)
     }
 
     internal func connectionActive() {
-        delegate?.connectionStatus!(active: true)
+        delegate?.connectionStatus!(true)
     }
 }
