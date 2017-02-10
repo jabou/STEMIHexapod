@@ -21,13 +21,13 @@ public enum CalibrationValuesError: Error {
     case outOfBounds
 }
 
-@objc protocol HexapodDelegate: class {
+protocol HexapodDelegate: class {
     /**
      Check if app is connected to STEMI.
 
      -returns: True if stemi is connected and sending data. False if it is not connected or not sending data.
      */
-    @objc optional func connectionStatus(_ isConnected: Bool)
+    func connectionStatus(_ isConnected: Bool)
 }
 
 open class Hexapod: PacketSenderDelegate {
@@ -457,10 +457,10 @@ open class Hexapod: PacketSenderDelegate {
 
     //MARK: - Internal methods for handling connection
     internal func connectionLost() {
-        delegate?.connectionStatus!(false)
+        delegate?.connectionStatus(false)
     }
 
     internal func connectionActive() {
-        delegate?.connectionStatus!(true)
+        delegate?.connectionStatus(true)
     }
 }
