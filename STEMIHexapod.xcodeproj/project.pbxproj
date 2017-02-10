@@ -10,10 +10,9 @@
 		062F5BE51E4E743E00B2E3FF /* CalibrationPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F5BDE1E4E743E00B2E3FF /* CalibrationPackage.swift */; };
 		062F5BE61E4E743E00B2E3FF /* CalibrationPacketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F5BDF1E4E743E00B2E3FF /* CalibrationPacketSender.swift */; };
 		062F5BE71E4E743E00B2E3FF /* Hexapod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F5BE01E4E743E00B2E3FF /* Hexapod.swift */; };
-		062F5BE81E4E743E00B2E3FF /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 062F5BE11E4E743E00B2E3FF /* Info.plist */; };
 		062F5BE91E4E743E00B2E3FF /* Packet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F5BE21E4E743E00B2E3FF /* Packet.swift */; };
 		062F5BEA1E4E743E00B2E3FF /* PacketSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062F5BE31E4E743E00B2E3FF /* PacketSender.swift */; };
-		062F5BEB1E4E743E00B2E3FF /* STEMIHexapod.h in Headers */ = {isa = PBXBuildFile; fileRef = 062F5BE41E4E743E00B2E3FF /* STEMIHexapod.h */; };
+		062F5BEB1E4E743E00B2E3FF /* STEMIHexapod.h in Headers */ = {isa = PBXBuildFile; fileRef = 062F5BE41E4E743E00B2E3FF /* STEMIHexapod.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		06F373381D85E86F00F44D21 /* STEMIHexapod.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F3732E1D85E86F00F44D21 /* STEMIHexapod.framework */; };
 		06F3733D1D85E86F00F44D21 /* STEMIHexapodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F3733C1D85E86F00F44D21 /* STEMIHexapodTests.swift */; };
 /* End PBXBuildFile section */
@@ -159,7 +158,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Jasmin Abou Aldan";
 				TargetAttributes = {
 					06F3732D1D85E86F00F44D21 = {
@@ -198,7 +197,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				062F5BE81E4E743E00B2E3FF /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +259,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -314,6 +313,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

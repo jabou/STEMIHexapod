@@ -9,12 +9,12 @@
 import UIKit
 
 
-class CalibrationPacketSender: NSObject, NSStreamDelegate {
+class CalibrationPacketSender: NSObject, StreamDelegate {
 
     var legsValuesArray: [UInt8] = []
     var hexapod: Hexapod
     var sendingInterval = 200
-    var out: NSOutputStream?
+    var out: OutputStream?
     var openCommunication = true
     var connected = false
     var counter = 0
@@ -24,22 +24,22 @@ class CalibrationPacketSender: NSObject, NSStreamDelegate {
         self.hexapod = hexapod
     }
 
-    func enterToCalibrationMode(complete: (Bool) -> Void) {
+    func enterToCalibrationMode(_ complete: @escaping (Bool) -> Void) {
         //Clear cache if .bin is saved
-        NSURLCache.sharedURLCache().removeAllCachedResponses()
+        URLCache.shared.removeAllCachedResponses()
         legsValuesArray = []
 
         //Configure for API call to STEMI
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 3
-        let session = NSURLSession(configuration: configuration)
-        let request = NSURLRequest(URL: NSURL(string: "http://\(self.hexapod.ipAddress)/linearization.bin")!)
-        let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) in
+        let session = URLSession(configuration: configuration)
+        let request = URLRequest(url: URL(string: "http://\(self.hexapod.ipAddress)/linearization.bin")!)
+        let task: URLSessionTask = session.dataTask(with: request, completionHandler: { (data, response, error) in
 
             if let data = data {
-                for index in 0..<data.length {
+                for index in 0..<data.count {
                     var value = UInt8(0)
-                    data.getBytes(&value, range: NSMakeRange(index,1))
+                    (data as NSData).getBytes(&value, range: NSMakeRange(index,1))
                     if index > 2 && index < 21 {
                         self.legsValuesArray.append(value)
                     }
@@ -57,7 +57,7 @@ class CalibrationPacketSender: NSObject, NSStreamDelegate {
     }
 
     func sendPackage() {
-        for (index, value) in legsValuesArray.enumerate() {
+        for (index, value) in legsValuesArray.enumerated() {
             do {
                 try hexapod.setCalibrationValue(value, atIndex: index)
             } catch {
@@ -68,24 +68,24 @@ class CalibrationPacketSender: NSObject, NSStreamDelegate {
         sendData()
     }
 
-    private func sendData() {
-        let dataSendQueue: dispatch_queue_t = dispatch_queue_create("Sending Queue", nil)
-        dispatch_async(dataSendQueue, {
+    fileprivate func sendData() {
+        let dataSendQueue: DispatchQueue = DispatchQueue(label: "Sending Queue", attributes: [])
+        dataSendQueue.async(execute: {
 
-            NSStream.getStreamsToHostWithName(self.hexapod.ipAddress, port: self.hexapod.port, inputStream: nil, outputStream: &self.out)
+            Stream.getStreamsToHost(withName: self.hexapod.ipAddress, port: self.hexapod.port, inputStream: nil, outputStream: &self.out)
 
             if let out = self.out {
                 out.delegate = self
-                out.scheduleInRunLoop(.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+                out.schedule(in: .main, forMode: RunLoopMode.defaultRunLoopMode)
                 out.open()
 
                 while self.openCommunication == true {
 
-                    NSThread.sleepForTimeInterval(0.2)
+                    Thread.sleep(forTimeInterval: 0.2)
 
                     out.write(self.hexapod.calibrationPacket.toByteArray(), maxLength: self.hexapod.calibrationPacket.toByteArray().count)
 
-                    if out.streamStatus == NSStreamStatus.Open {
+                    if out.streamStatus == Stream.Status.open {
                         self.connected = true
                         self.counter = 0
                     } else {
@@ -103,10 +103,10 @@ class CalibrationPacketSender: NSObject, NSStreamDelegate {
     }
 
     func sendOnePackage() {
-        NSStream.getStreamsToHostWithName(self.hexapod.ipAddress, port: self.hexapod.port, inputStream: nil, outputStream: &self.out)
+        Stream.getStreamsToHost(withName: self.hexapod.ipAddress, port: self.hexapod.port, inputStream: nil, outputStream: &self.out)
         if let out = self.out {
             out.delegate = self
-            out.scheduleInRunLoop(.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+            out.schedule(in: .main, forMode: RunLoopMode.defaultRunLoopMode)
             out.open()
             out.write(self.hexapod.calibrationPacket.toByteArray(), maxLength: self.hexapod.calibrationPacket.toByteArray().count)
             out.close()
@@ -117,7 +117,7 @@ class CalibrationPacketSender: NSObject, NSStreamDelegate {
         self.openCommunication = false
     }
 
-    private func dropConnection() {
+    fileprivate func dropConnection() {
         self.connected = false
 //        dispatch_async(dispatch_get_main_queue()) {
 //            self.delegate?.connectionLost()
@@ -125,14 +125,14 @@ class CalibrationPacketSender: NSObject, NSStreamDelegate {
         self.stopSendingData()
     }
 
-    @objc func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
+    @objc func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         if aStream == out {
             switch eventCode {
-            case NSStreamEvent.ErrorOccurred:
+            case Stream.Event.errorOccurred:
                 break
-            case NSStreamEvent.OpenCompleted:
+            case Stream.Event.openCompleted:
                 break
-            case NSStreamEvent.HasSpaceAvailable:
+            case Stream.Event.hasSpaceAvailable:
                 break
             default:
                 break

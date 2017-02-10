@@ -13,11 +13,11 @@ protocol PacketSenderDelegate: class {
     func connectionActive()
 }
 
-class PacketSender: NSObject, NSStreamDelegate {
+class PacketSender: NSObject, StreamDelegate {
 
     var hexapod: Hexapod
     var sendingInterval = 200
-    var out: NSOutputStream?
+    var out: OutputStream?
     var openCommunication = true
     var connected = false
     var counter = 0
@@ -35,27 +35,28 @@ class PacketSender: NSObject, NSStreamDelegate {
     func startSendingData(){
 
         //Clear cache if json is saved
-        NSURLCache.sharedURLCache().removeAllCachedResponses()
+        URLCache.shared.removeAllCachedResponses()
 
         //Configure for API call to STEMI
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 3
-        let session = NSURLSession(configuration: configuration)
-        let request = NSURLRequest(URL: NSURL(string: "http://\(self.hexapod.ipAddress)/stemiData.json")!)
-        let task: NSURLSessionTask = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) in
+        let session = URLSession(configuration: configuration)
+        let request = URLRequest(url: URL(string: "http://\(self.hexapod.ipAddress)/stemiData.json")!)
+        let task: URLSessionTask = session.dataTask(with: request, completionHandler: { (data, response, error) in
 
             //If there is data, try to read it
             if let data = data {
                 //Try to read data from json
                 do {
-                    let jsonData = try NSJSONSerialization.JSONObjectWithData(data, options: [])
-                    if let valide = jsonData["isValid"] as? Bool {
-                        //JSON is OK - start sending data
-                        if valide {
-                            self.sendData()
-                            self.delegate?.connectionActive()
-                        } else {
-                            self.dropConnection()
+                    if let jsonData = try JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
+                        if let valide = jsonData["isValid"] as? Bool {
+                            //JSON is OK - start sending data
+                            if valide {
+                                self.sendData()
+                                self.delegate?.connectionActive()
+                            } else {
+                                self.dropConnection()
+                            }
                         }
                     }
                 }
@@ -76,33 +77,33 @@ class PacketSender: NSObject, NSStreamDelegate {
         self.openCommunication = false
     }
 
-    private func dropConnection() {
+    fileprivate func dropConnection() {
         self.connected = false
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             self.delegate?.connectionLost()
         }
         self.stopSendingData()
     }
 
-    private func sendData() {
-        let dataSendQueue: dispatch_queue_t = dispatch_queue_create("Sending Queue", nil)
-        dispatch_async(dataSendQueue, {
+    fileprivate func sendData() {
+        let dataSendQueue: DispatchQueue = DispatchQueue(label: "Sending Queue", attributes: [])
+        dataSendQueue.async(execute: {
 
-            NSStream.getStreamsToHostWithName(self.hexapod.ipAddress, port: self.hexapod.port, inputStream: nil, outputStream: &self.out)
+            Stream.getStreamsToHost(withName: self.hexapod.ipAddress, port: self.hexapod.port, inputStream: nil, outputStream: &self.out)
 
             if let out = self.out {
                 out.delegate = self
-                out.scheduleInRunLoop(.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+                out.schedule(in: .main, forMode: RunLoopMode.defaultRunLoopMode)
                 out.open()
 
                 while self.openCommunication == true {
 
-                    NSThread.sleepForTimeInterval(0.2)
+                    Thread.sleep(forTimeInterval: 0.2)
 
                     out.write(self.hexapod.currPacket.toByteArray(), maxLength: self.hexapod.currPacket.toByteArray().count)
 
-                    if out.streamStatus == NSStreamStatus.Open {
-                        dispatch_async(dispatch_get_main_queue()) {
+                    if out.streamStatus == Stream.Status.open {
+                        DispatchQueue.main.async {
                             self.delegate?.connectionActive()
                         }
                         self.connected = true
@@ -123,14 +124,14 @@ class PacketSender: NSObject, NSStreamDelegate {
         })
     }
 
-    @objc func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
+    @objc func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
         if aStream == out {
             switch eventCode {
-            case NSStreamEvent.ErrorOccurred:
+            case Stream.Event.errorOccurred:
                 break
-            case NSStreamEvent.OpenCompleted:
+            case Stream.Event.openCompleted:
                 break
-            case NSStreamEvent.HasSpaceAvailable:
+            case Stream.Event.hasSpaceAvailable:
                 break
             default:
                 break

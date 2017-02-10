@@ -9,13 +9,13 @@
 import UIKit
 
 enum WriteData: UInt8 {
-    case No
-    case Yes
+    case no
+    case yes
 }
 
 class CalibrationPackage {
 
-    var writeToHexapod: UInt8 = WriteData.No.rawValue
+    var writeToHexapod: UInt8 = WriteData.no.rawValue
     var legsValues: [UInt8] = [50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50]
 
     var bufferOutput: [UInt8] = []
@@ -25,8 +25,8 @@ class CalibrationPackage {
         self.bufferOutput = []
 
         let pkt: [UInt8] = Array("LIN".utf8)
-        self.bufferOutput.appendContentsOf(pkt)
-        self.bufferOutput.appendContentsOf(legsValues)
+        self.bufferOutput.append(contentsOf: pkt)
+        self.bufferOutput.append(contentsOf: legsValues)
         self.bufferOutput.append(writeToHexapod)
 
         return bufferOutput
