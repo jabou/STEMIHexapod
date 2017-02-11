@@ -46,7 +46,7 @@ open class Hexapod: PacketSenderDelegate {
     fileprivate var initialCalibrationData: [UInt8] = []
     
     //Delegate
-    weak var delegate: HexapodDelegate?
+    public weak var delegate: HexapodDelegate?
 
     //MARK: - Hexapod init
     
