@@ -8,6 +8,10 @@
 
 import UIKit
 
+enum CalibrationPacketSenderError: Error {
+    case ipAddressError
+}
+
 
 class CalibrationPacketSender: NSObject, StreamDelegate {
 
@@ -24,7 +28,14 @@ class CalibrationPacketSender: NSObject, StreamDelegate {
         self.hexapod = hexapod
     }
 
-    func enterToCalibrationMode(_ complete: @escaping (Bool) -> Void) {
+    func enterToCalibrationMode(_ complete: @escaping (Bool) -> Void) throws {
+        guard let ipAddress = self.hexapod.ipAddress else {
+            throw CalibrationPacketSenderError.ipAddressError
+        }
+        guard  let url = URL(string: "http://\(ipAddress)/linearization.bin") else {
+            return
+        }
+
         //Clear cache if .bin is saved
         URLCache.shared.removeAllCachedResponses()
         legsValuesArray = []
@@ -33,7 +44,7 @@ class CalibrationPacketSender: NSObject, StreamDelegate {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 3
         let session = URLSession(configuration: configuration)
-        let request = URLRequest(url: URL(string: "http://\(self.hexapod.ipAddress)/linearization.bin")!)
+        let request = URLRequest(url: url)
         let task: URLSessionTask = session.dataTask(with: request, completionHandler: { (data, response, error) in
 
             if let data = data {

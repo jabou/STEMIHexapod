@@ -8,6 +8,10 @@
 
 import UIKit
 
+enum PacketSenderError: Error {
+    case ipAddressError
+}
+
 protocol PacketSenderDelegate: class {
     func connectionLost()
     func connectionActive()
@@ -32,7 +36,14 @@ class PacketSender: NSObject, StreamDelegate {
         self.sendingInterval = sendingInterval
     }
 
-    func startSendingData(){
+    func startSendingData() throws {
+
+        guard let ipAddress = self.hexapod.ipAddress else {
+            throw PacketSenderError.ipAddressError
+        }
+        guard let url = URL(string: "http://\(ipAddress)/stemiData.json") else {
+            return
+        }
 
         //Clear cache if json is saved
         URLCache.shared.removeAllCachedResponses()
@@ -41,7 +52,7 @@ class PacketSender: NSObject, StreamDelegate {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 3
         let session = URLSession(configuration: configuration)
-        let request = URLRequest(url: URL(string: "http://\(self.hexapod.ipAddress)/stemiData.json")!)
+        let request = URLRequest(url: url)
         let task: URLSessionTask = session.dataTask(with: request, completionHandler: { (data, response, error) in
 
             //If there is data, try to read it

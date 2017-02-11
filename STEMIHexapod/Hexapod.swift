@@ -105,15 +105,23 @@ open class Hexapod: PacketSenderDelegate {
     open func connect(){
         if calibrationModeEnabled {
             sendCalibrationPacket = CalibrationPacketSender(hexapod: self)
-            sendCalibrationPacket.enterToCalibrationMode({ entered in
-                if entered {
-                    self.initialCalibrationData = self.calibrationPacket.legsValues
-                }
-            })
+            do {
+                try sendCalibrationPacket.enterToCalibrationMode({ entered in
+                    if entered {
+                        self.initialCalibrationData = self.calibrationPacket.legsValues
+                    }
+                })
+            } catch {
+                //WARNING: HANDLE CATCH
+            }
         } else {
             sendPacket = PacketSender(hexapod: self)
             sendPacket.delegate = self
-            sendPacket.startSendingData()
+            do {
+                try sendPacket.startSendingData()
+            } catch {
+                //WARNING: HANDLE CATCH
+            }
         }
     }
 
@@ -123,17 +131,26 @@ open class Hexapod: PacketSenderDelegate {
     open func connectWithCompletion(_ complete: @escaping (Bool) -> Void) {
         if calibrationModeEnabled {
             sendCalibrationPacket = CalibrationPacketSender(hexapod: self)
-            sendCalibrationPacket.enterToCalibrationMode({ entered in
-                if entered {
-                    self.initialCalibrationData = self.sendCalibrationPacket.legsValuesArray
-                    complete(true)
-                }
-            })
+            do {
+                try sendCalibrationPacket.enterToCalibrationMode({ entered in
+                    if entered {
+                        self.initialCalibrationData = self.sendCalibrationPacket.legsValuesArray
+                        complete(true)
+                    }
+                })
+            } catch {
+                //WARNING: HANDLE CATCH
+            }
         } else {
             sendPacket = PacketSender(hexapod: self)
             sendPacket.delegate = self
-            sendPacket.startSendingData()
-            complete(true)
+            do {
+                try sendPacket.startSendingData()
+                complete(true)
+            } catch {
+                //WARNING: HANDLE CATCH
+                complete(false)
+            }
         }
     }
     
