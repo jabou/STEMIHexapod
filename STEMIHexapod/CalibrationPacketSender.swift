@@ -12,17 +12,21 @@ enum CalibrationPacketSenderError: Error {
     case ipAddressError
 }
 
+protocol CalibrationPacketSenderDelegate: class {
+    func calibrationConnectionLost()
+    func calibrationConnectionActive()
+}
 
 class CalibrationPacketSender: NSObject, StreamDelegate {
 
     var legsValuesArray: [UInt8] = []
     var hexapod: Hexapod
-    var sendingInterval = 200
+    var sendingInterval = 100
     var out: OutputStream?
     var openCommunication = true
     var connected = false
     var counter = 0
-
+    weak var delegate: CalibrationPacketSenderDelegate?
 
     init(hexapod: Hexapod){
         self.hexapod = hexapod
@@ -99,6 +103,7 @@ class CalibrationPacketSender: NSObject, StreamDelegate {
                     if out.streamStatus == Stream.Status.open {
                         self.connected = true
                         self.counter = 0
+                        self.delegate?.calibrationConnectionActive()
                     } else {
                         self.counter += 1
                         if self.counter == 10 {
@@ -130,9 +135,9 @@ class CalibrationPacketSender: NSObject, StreamDelegate {
 
     fileprivate func dropConnection() {
         self.connected = false
-//        dispatch_async(dispatch_get_main_queue()) {
-//            self.delegate?.connectionLost()
-//        }
+        DispatchQueue.main.async {
+            self.delegate?.calibrationConnectionLost()
+        }
         self.stopSendingData()
     }
 
