@@ -20,7 +20,7 @@ protocol PacketSenderDelegate: class {
 class PacketSender: NSObject, StreamDelegate {
 
     var hexapod: Hexapod
-    var sendingInterval = 200
+    var sendingInterval = 100
     var out: OutputStream?
     var openCommunication = true
     var connected = false
