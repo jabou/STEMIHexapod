@@ -19,7 +19,7 @@ class Packet{
     var accY: UInt8 = 0
     var height: UInt8 = 50
     var walkingStyle: UInt8 = 0
-    let slidersArray: [UInt8] = [0, 0, 0, 50, 0, 0, 0]
+    let slidersArray: [UInt8] = [0, 0, 0, 50, 0, 0, 0, 0, 0]
     
     var bufferOutput: [UInt8] = []
 

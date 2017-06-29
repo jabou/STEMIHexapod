@@ -19,9 +19,11 @@ protocol CalibrationPacketSenderDelegate: class {
 
 class CalibrationPacketSender: NSObject, StreamDelegate {
 
+    // Time in seconds
+    let sendingInterval = 0.1
+
     var legsValuesArray: [UInt8] = []
     var hexapod: Hexapod
-    var sendingInterval = 100
     var out: OutputStream?
     var openCommunication = true
     var connected = false
@@ -96,7 +98,7 @@ class CalibrationPacketSender: NSObject, StreamDelegate {
 
                 while self.openCommunication == true {
 
-                    Thread.sleep(forTimeInterval: 0.2)
+                    Thread.sleep(forTimeInterval: self.sendingInterval)
 
                     out.write(self.hexapod.calibrationPacket.toByteArray(), maxLength: self.hexapod.calibrationPacket.toByteArray().count)
 
