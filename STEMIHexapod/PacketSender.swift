@@ -19,8 +19,10 @@ protocol PacketSenderDelegate: class {
 
 class PacketSender: NSObject, StreamDelegate {
 
+    // Time in seconds
+    let sendingInterval = 0.1
+
     var hexapod: Hexapod
-    var sendingInterval = 100
     var out: OutputStream?
     var openCommunication = true
     var connected = false
@@ -29,11 +31,6 @@ class PacketSender: NSObject, StreamDelegate {
     
     init(hexapod: Hexapod){
         self.hexapod = hexapod
-    }
-    
-    init(hexapod: Hexapod, sendingInterval: Int){
-        self.hexapod = hexapod
-        self.sendingInterval = sendingInterval
     }
 
     func startSendingData() throws {
@@ -109,7 +106,7 @@ class PacketSender: NSObject, StreamDelegate {
 
                 while self.openCommunication == true {
 
-                    Thread.sleep(forTimeInterval: 0.2)
+                    Thread.sleep(forTimeInterval: self.sendingInterval)
 
                     out.write(self.hexapod.currPacket.toByteArray(), maxLength: self.hexapod.currPacket.toByteArray().count)
 
